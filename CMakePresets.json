@@ -1,0 +1,28 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "native",
+      "displayName": "Native",
+      "description": "Default options for native build",
+      "binaryDir": "${sourceDir}/build-native"
+    },
+    {
+      "name": "web",
+      "displayName": "Web",
+      "description": "Default options for WebAssembly build",
+      "binaryDir": "${sourceDir}/build-web",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS": {
+          "type": "FILEPATH",
+          "value": "${sourceDir}/cmake/EmscriptenScanDepsFix/emscan-deps"
+        }
+      }
+    }
+  ]
+}
