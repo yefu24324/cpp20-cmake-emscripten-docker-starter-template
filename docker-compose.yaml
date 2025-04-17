@@ -1,0 +1,12 @@
+version: '3.5'
+services:
+  # 服务名称为 mongodb，该名称主要用于容器之间服务的 dns 解析
+  emsdk:
+    # 容器的名称为 mymongo
+    container_name: emsdk
+    # 使用的镜像名称
+    image: emscripten/emsdk
+    # 宿主机硬盘目录映射容器内的存放数据的目录
+    volumes:
+      - .:/src
+    command: /bin/bash -c "sh build.sh"

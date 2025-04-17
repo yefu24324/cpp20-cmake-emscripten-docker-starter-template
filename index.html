@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>WebAssembly C++ 函数调用示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input {
+            padding: 8px;
+            width: 100px;
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            min-height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>WebAssembly C++ 函数调用示例</h1>
+
+    <div class="input-group">
+        <label for="num1">第一个数字:</label>
+        <input type="number" id="num1" value="100">
+    </div>
+
+    <div class="input-group">
+        <label for="num2">第二个数字:</label>
+        <input type="number" id="num2" value="200">
+    </div>
+
+    <button onclick="runCalculation()">计算</button>
+
+    <div>
+        <h3>结果：</h3>
+        <pre id="result"></pre>
+    </div>
+
+    <script>
+        // 加载WebAssembly模块
+        var Module = {
+            onRuntimeInitialized: function () {
+                console.log('WebAssembly模块已加载');
+                test_run();
+            },
+        };
+
+        function runCalculation() {
+            const num1 = parseInt(document.getElementById('num1').value);
+            const num2 = parseInt(document.getElementById('num2').value);
+
+            // 确保Module已经加载
+            if (Module.calculate) {
+                // 调用C++函数
+                const jsonResult = Module.calculate(num1, num2);
+
+                // 解析JSON字符串
+                const resultObj = JSON.parse(jsonResult);
+
+                // 显示结果
+                document.getElementById('result').textContent =
+                    JSON.stringify(resultObj, null, 2);
+            } else {
+                document.getElementById('result').textContent =
+                    "WebAssembly模块尚未加载完成，请稍后再试";
+            }
+        }
+
+        /**
+         * 验证C++调用JavaScript
+         */
+        function test_run() {
+            console.log("[JS Log] javascript调用 run");
+
+            const num = Module.calculate(1, 2);
+            console.log("[JS Log] javascript调用 calculate 结果：", num);
+
+            const result = Module.string_cpp_to_js(1, 2);
+            console.log("[JS Log] javascript调用 string_count 结果：", result);
+
+            Module.string_js_to_cpp("hello");
+
+            // 调用C++函数获取Statistic对象
+            const stats = Module.statistic_count(5, 3);
+
+            // 访问结构体的字段
+            console.log("[JS Log] 普攻DPS:", stats.commonDPS);       // 输出: 8
+            console.log("[JS Log] 周期DPS:", stats.averageDPS);      // 输出: 8
+            console.log("[JS Log] 技能期DPS:", stats.skillDPS);      // 输出: 8
+            console.log("[JS Log] 技能总伤:", stats.totalDamage);    // 输出: 8
+
+            // 也可以直接使用解构赋值
+            const { commonDPS, averageDPS, skillDPS, totalDamage } = Module.statistic_count(5, 3);
+            console.log("[JS Log] 普攻DPS:", commonDPS);             // 输出: 8
+
+
+            console.log("[JS Log] -----------------以上是调试验证--------------------------------");
+
+            const statistic = Module.cal_hdl(1, 2, 3, 4, 3, 1, 2, 3, 4, 5);
+            console.log("[JS Log] statistic:", statistic);
+        }
+
+    </script>
+
+    <script async type="text/javascript" src="./build/src/my_target.js"></script>
+</body>
+
+</html>
