@@ -10,6 +10,8 @@ C++20 CMake-Emscripten Template
 
 **Solution:** This repository provides a minimal setup that **imports the fix** proposed by [PR#21987](https://github.com/emscripten-core/emscripten/pull/21987) **without the need to modify emscripten** itself.
 
+**Enhancements:** Building on the original project, we've added Docker support that allows developers to quickly build the project using simple Docker commands, eliminating the need for complex environment setup. Additionally, we've included several example functions to help newcomers learn how to use C++20 with WebAssembly.
+
 🥸 Using as a template
 ---------------------
 
@@ -24,6 +26,17 @@ You may use this repository as a template, then replace the following strings in
 This is a regular CMake project, that builds like a CMake project. The **only exception** is the extra option needed for Web build (see below).
 
 These instructions show how to manually call CMake, but a `CMakePresets.json` file is also provided as an alternative.
+
+### Building with Docker (Recommended)
+
+The simplest way is to use Docker, without installing any dependencies:
+
+```bash
+# One command to build the project and generate JavaScript/WebAssembly files
+docker compose up --remove-orphans
+```
+
+This command automatically sets up all necessary environments and compiles the project using Emscripten, producing files that can be run directly in a browser.
 
 ### Native
 
@@ -64,3 +77,15 @@ cmake --build build
 python -m http.server 8000
 # The browse to http://localhost:8000/build-web/src/my_target.html
 ```
+
+📚 Example Functions
+-----------
+
+To help newcomers get started quickly, we've added several example functions that demonstrate how C++20 and WebAssembly can work together:
+
+- JavaScript/C++ data passing examples
+- C++20 new features in WebAssembly
+- DOM manipulation examples
+- Asynchronous function call examples
+
+These example functions come with detailed comments and can serve as a reference for developers learning and practicing.
